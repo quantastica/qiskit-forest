@@ -1,6 +1,6 @@
 # Forest backend for Qiskit
 
-Allows running Qiskit code on Rigetti simulators and quantum computers.
+Allows running [Qiskit](https://qiskit.org/) code on [Rigetti](https://www.rigetti.com/) simulators and quantum computers by changing only two lines of your Qiskit code.
 
 
 # Install
@@ -11,19 +11,22 @@ pip install quantastica-qiskit-forest
 
 # Usage
 
-1. Import ForestBackend into your Qiskit code:
+Import `ForestBackend` into your Qiskit code:
 
 ```
 from quantastica.qiskit_forest import ForestBackend
 ```
 
-2. Replace `Aer.get_backend` with `ForestBackend.get_backend`.
+And replace `Aer.get_backend` with `ForestBackend.get_backend`.
+
 
 # Example
 
 ```python
 from qiskit import QuantumRegister, ClassicalRegister
 from qiskit import QuantumCircuit, execute, Aer
+
+# Import ForestBackend:
 from quantastica.qiskit_forest import ForestBackend
 
 qc = QuantumCircuit()
@@ -59,6 +62,34 @@ job_result = job.result()
 print(job_result.get_counts(qc))
 
 ```
+
+## Prerequisites
+
+**Running on your local machine on Rigetti simulator**
+
+You need to install [Rigetti Forest SDK](https://qcs.rigetti.com/sdk-downloads) and make sure that `quilc` compiler and `qvm` simulator are running:
+
+Open new terminal and run:
+
+```
+quilc -S
+```
+
+And in one more new terminal run:
+
+```
+qvm -S -c
+```
+
+**Running on Rigetti quantum computer**
+
+- You need to get access to Rigetti [Quantum Cloud Services](https://qcs.rigetti.com/request-access) (QCS)
+
+- In your Quantum Machine Image (QMI) install this package and Qiskit
+
+- Reserve a [QPU lattice](https://www.rigetti.com/qcs/docs/reservations)
+
+- Run your code via QMI terminal or Jupyter notebook served by your QMI
 
 
 # Details

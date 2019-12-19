@@ -23,13 +23,13 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="quantastica-qiskit-forest",
-    version="0.9.6",
+    version="0.9.7",
     description="Quantastica quantum simulator tools",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://quantastica.com",
+    url="https://github.com/quantastica/qiskit-forest",
     author="Quantastica",
-    author_email="info@quantastica.com",
+    author_email="support@quantastica.com",
     license="Apache License 2.0",
     classifiers=[
         "Development Status :: 4 - Beta",
