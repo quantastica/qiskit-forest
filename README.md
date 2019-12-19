@@ -11,13 +11,13 @@ pip install quantastica-qiskit-forest
 
 # Usage
 
-Import ForestBackend into your Qiskit code:
+1. Import ForestBackend into your Qiskit code:
 
 ```
 from quantastica.qiskit_forest import ForestBackend
 ```
 
-Replace `Aer.get_backend` with `ForestBackend.get_backend`.
+2. Replace `Aer.get_backend` with `ForestBackend.get_backend`.
 
 # Example
 
@@ -51,6 +51,7 @@ backend = ForestBackend.get_backend("qasm_simulator")
 # backend = ForestBackend.get_backend("statevector_simulator")
 # backend = ForestBackend.get_backend("Aspen-7-28Q-A")
 # backend = ForestBackend.get_backend("Aspen-7-28Q-A", as_qvm=True)
+# ...
 
 job = execute(qc, backend=backend)
 job_result = job.result()
@@ -85,7 +86,7 @@ If backend name is not provided then it will act as `qasm_simulator`
 
 - `False` (default)
 
-- `True`: if backend_name is QPU lattice name, then code will execute on QVM which will mimics QPU 
+- `True`: if backend_name is QPU lattice name, then code will execute on QVM which will mimic QPU
 
 
 That's it. Enjoy! :)
