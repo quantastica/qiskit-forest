@@ -58,7 +58,6 @@ class ForestJob(BaseJob):
         if self._future is not None:
             raise JobError("We have already submitted the job!")
 
-        logger.debug("submit...")
         validate_qobj_against_schema(self._qobj)
         self._future = self._executor.submit(self._run_with_rigetti)
 
@@ -130,7 +129,6 @@ class ForestJob(BaseJob):
             qobj.to_dict(),
             qconvert.Format.PYQUIL,
             conversion_options)
-        logger.debug("PYQUIL:\r\n",pyquilstr)
         global_vars=dict()
         counts = {}
         code = compile(pyquilstr, 'converted_qobj.py', 'exec')
@@ -181,10 +179,6 @@ class ForestJob(BaseJob):
         else:
             data['counts'] = res['counts']
 
-        """ 
-        Following dictionary is taken from teleportation test
-        as print(result.to_dict())
-        """
         self._result = {
             'success': True, 
             'backend_name': qobj_header['backend_name'], 

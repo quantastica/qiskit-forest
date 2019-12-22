@@ -12,11 +12,7 @@
 # that they have been altered from the originals.
 
 import uuid
-import logging
-import time
-from collections import Counter
 
-import numpy as np
 from quantastica.qiskit_forest import ForestJob
 from qiskit.providers import BaseBackend
 from qiskit.result import Result
@@ -59,18 +55,8 @@ class ForestBackend(BaseBackend):
             self.DEFAULT_CONFIGURATION)
         super().__init__(configuration=configuration, provider=provider)
 
-        self._configuration = configuration
         self._lattice_name = lattice_name
         self._as_qvm = as_qvm
-        self._number_of_qubits = None
-        self._number_of_cbits = None
-        self._statevector = None
-        self._results = {}
-        self._shots = {}
-        self._local_random = np.random.RandomState()
-        self._sample_measure = False
-        self._chop_threshold = 15  # chop to 10^-15
-
 
     #@profile
     def run(self, qobj):
