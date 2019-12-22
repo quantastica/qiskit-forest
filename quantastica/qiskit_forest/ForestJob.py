@@ -151,7 +151,8 @@ class ForestJob(BaseJob):
             return { "state": state, "counts": counts }
         else:
             ex=global_vars['ex']
-            ex.wrap_in_numshots_loop(shots)
+            if shots > 1:
+                ex.wrap_in_numshots_loop(shots)
             counts=qc.run(ex)
             counts = ForestJob._convert_counts(counts)
             return { "counts": counts }

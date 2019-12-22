@@ -2,6 +2,8 @@
 
 Allows running [Qiskit](https://qiskit.org/) code on [Rigetti](https://www.rigetti.com/) simulators and quantum computers by changing only two lines of your Qiskit code.
 
+More goodies at [https://quantastica.com](https://quantastica.com)
+
 
 # Install
 
@@ -63,9 +65,9 @@ print(job_result.get_counts(qc))
 
 ```
 
-## Prerequisites
+# Prerequisites
 
-**Running on your local machine on Rigetti simulator**
+## Running on your local Rigetti simulator
 
 You need to install [Rigetti Forest SDK](https://qcs.rigetti.com/sdk-downloads) and make sure that `quilc` compiler and `qvm` simulator are running:
 
@@ -81,7 +83,7 @@ And in one more new terminal run:
 qvm -S -c
 ```
 
-**Running on Rigetti quantum computer**
+## Running on Rigetti quantum computer
 
 - You need to get access to Rigetti [Quantum Cloud Services](https://qcs.rigetti.com/request-access) (QCS)
 
