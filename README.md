@@ -2,7 +2,7 @@
 
 Allows running [Qiskit](https://qiskit.org/) code on [Rigetti](https://www.rigetti.com/) simulators and quantum computers by changing only two lines of your Qiskit code.
 
-More goodies at [https://quantastica.com](https://quantastica.com)
+**More goodies at** [https://quantastica.com](https://quantastica.com)
 
 
 # Install
