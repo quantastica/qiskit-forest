@@ -122,7 +122,8 @@ class ForestJob(BaseJob):
         conversion_options = { "all_experiments": False, 
             "create_exec_code": False, 
             "lattice": lattice_name, 
-            "as_qvm": as_qvm }
+            "as_qvm": as_qvm,
+            "shots": shots }
 
         pyquilstr = qconvert.convert(
             qconvert.Format.QOBJ,
@@ -149,8 +150,7 @@ class ForestJob(BaseJob):
             return { "state": state, "counts": counts }
         else:
             ex=global_vars['ex']
-            if shots > 1:
-                ex.wrap_in_numshots_loop(shots)
+
             counts=qc.run(ex)
             counts = ForestJob._convert_counts(counts)
             return { "counts": counts }
