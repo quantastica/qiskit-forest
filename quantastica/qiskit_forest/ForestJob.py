@@ -41,10 +41,7 @@ logger = logging.getLogger(__name__)
 
 class ForestJob(BaseJob):
 
-    if sys.platform in ['darwin', 'win32']:
-        _executor = futures.ThreadPoolExecutor()
-    else:
-        _executor = futures.ProcessPoolExecutor()
+    _executor = futures.ThreadPoolExecutor()
 
     def __init__(self, backend, job_id, qobj, lattice_name = None, as_qvm = False):
         super().__init__(backend, job_id)
