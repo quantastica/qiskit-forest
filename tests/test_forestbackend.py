@@ -2,7 +2,8 @@ import unittest
 import warnings
 from quantastica.qiskit_forest import ForestBackend
 from qiskit import QuantumRegister, ClassicalRegister
-from qiskit import QuantumCircuit, execute
+from qiskit import QuantumCircuit, execute, Aer
+from numpy import pi
 
 class TestForestBackend(unittest.TestCase):
     def setUp(self):
@@ -20,19 +21,19 @@ class TestForestBackend(unittest.TestCase):
         warnings.filterwarnings(action="always", 
                          category=ResourceWarning)
 
+
     def test_bell_counts(self):
         shots = 256
         qc=TestForestBackend.get_bell_qc()
+        stats = TestForestBackend.execute_and_get_stats(
+            ForestBackend.ForestBackend(),
+            qc,
+            shots
+        )
+        self.assertTrue( stats['statevector'] is None)
+        self.assertEqual( len(stats['counts']), 2)
+        self.assertEqual( stats['totalcounts'], shots)
 
-        backend = ForestBackend.ForestBackend()
-        job = execute(qc, backend=backend, shots=shots)
-        job_result = job.result()
-        counts = job_result.get_counts(qc)
-        total_counts = 0
-        for c in counts:
-            total_counts += counts[c]
-        self.assertEqual( len(counts), 2)
-        self.assertEqual( total_counts, shots)
 
     def test_bell_state_vector(self):
         """
@@ -41,16 +42,79 @@ class TestForestBackend(unittest.TestCase):
         """
         shots = 256
         qc = TestForestBackend.get_bell_qc()
+        stats = TestForestBackend.execute_and_get_stats(
+            ForestBackend.ForestBackend(lattice_name="statevector_simulator"),
+            qc,
+            shots
+        )
+        self.assertEqual( len(stats['statevector']), 4)
+        self.assertEqual( len(stats['counts']), 1)
+        self.assertEqual( stats['totalcounts'], 1)
 
-        backend = ForestBackend.ForestBackend(lattice_name="statevector_simulator")
+    def test_teleport_state_vector(self):
+        """
+        This is test for statevector which means that 
+        even with shots > 1 it should execute only one shot
+        """
+        shots = 256
+        qc = TestForestBackend.get_teleport_qc()
+
+        """ 
+        Let's first run the aer simulation to get statevector 
+        and counts so we can compare those results against forest's
+        """
+        stats_aer = TestForestBackend.execute_and_get_stats(
+            Aer.get_backend('statevector_simulator'),
+            qc,
+            shots
+        )
+        """ 
+        Now execute forest backend 
+        """
+        stats = TestForestBackend.execute_and_get_stats(
+            ForestBackend.ForestBackend(lattice_name="statevector_simulator"),
+            qc,
+            shots
+        )
+
+        self.assertEqual(len(stats['counts']), len(stats_aer['counts']))
+        self.assertEqual(len(stats['statevector']), len(stats_aer['statevector']))
+        self.assertEqual(stats['totalcounts'], stats_aer['totalcounts'])
+
+        """ 
+        Let's verify that tests are working as expected 
+        by running fail case
+        """
+        stats = TestForestBackend.execute_and_get_stats(
+            ForestBackend.ForestBackend(),
+            qc,
+            shots
+        )
+
+        self.assertNotEqual(len(stats['counts']), len(stats_aer['counts']))
+        self.assertTrue(stats['statevector'] is None)
+        self.assertNotEqual(stats['totalcounts'], stats_aer['totalcounts'])
+
+    
+
+    @staticmethod
+    def execute_and_get_stats(backend, qc, shots):
         job = execute(qc, backend=backend, shots=shots)
         job_result = job.result()
         counts = job_result.get_counts(qc)
         total_counts = 0
         for c in counts:
             total_counts += counts[c]
-        self.assertEqual( len(counts), 1)
-        self.assertEqual( total_counts, 1)
+
+        try:
+            state_vector = job_result.get_statevector(qc)
+        except:
+            state_vector = None
+        ret = dict()
+        ret['counts'] = counts
+        ret['statevector'] = state_vector
+        ret['totalcounts'] = total_counts
+        return ret
 
     @staticmethod
     def get_bell_qc():
@@ -66,7 +130,29 @@ class TestForestBackend(unittest.TestCase):
         qc.cx(q[0], q[1])
         qc.measure(q[0], c[0])
         qc.measure(q[1], c[1])
+        return qc
 
+    @staticmethod
+    def get_teleport_qc():
+        qc = QuantumCircuit(name="Teleport")
+
+        q = QuantumRegister(3, 'q')
+        c0 = ClassicalRegister(1, 'c0')
+        c1 = ClassicalRegister(1, 'c1')
+
+        qc.add_register(q)
+        qc.add_register(c0)
+        qc.add_register(c1)
+
+        qc.rx(pi / 4, q[0])
+        qc.h(q[1])
+        qc.cx(q[1], q[2])
+        qc.cx(q[0], q[1])
+        qc.h(q[0])
+        qc.measure(q[1], c1[0])
+        qc.x(q[2]).c_if(c1, 1)
+        qc.measure(q[0], c0[0])
+        qc.z(q[2]).c_if(c0, 1)
         return qc
 
 if __name__ == '__main__':
