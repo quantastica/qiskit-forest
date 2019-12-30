@@ -20,7 +20,40 @@ class TestForestBackend(unittest.TestCase):
         warnings.filterwarnings(action="always", 
                          category=ResourceWarning)
 
-    def test_bell(self):
+    def test_bell_counts(self):
+        shots = 256
+        qc=TestForestBackend.get_bell_qc()
+
+        backend = ForestBackend.ForestBackend()
+        job = execute(qc, backend=backend, shots=shots)
+        job_result = job.result()
+        counts = job_result.get_counts(qc)
+        total_counts = 0
+        for c in counts:
+            total_counts += counts[c]
+        self.assertEqual( len(counts), 2)
+        self.assertEqual( total_counts, shots)
+
+    def test_bell_state_vector(self):
+        """
+        This is test for statevector which means that 
+        even with shots > 1 it should execute only one shot
+        """
+        shots = 256
+        qc = TestForestBackend.get_bell_qc()
+
+        backend = ForestBackend.ForestBackend(lattice_name="statevector_simulator")
+        job = execute(qc, backend=backend, shots=shots)
+        job_result = job.result()
+        counts = job_result.get_counts(qc)
+        total_counts = 0
+        for c in counts:
+            total_counts += counts[c]
+        self.assertEqual( len(counts), 1)
+        self.assertEqual( total_counts, 1)
+
+    @staticmethod
+    def get_bell_qc():
         qc = QuantumCircuit(name="Bell")
 
         q = QuantumRegister(2, 'q')
@@ -34,13 +67,7 @@ class TestForestBackend(unittest.TestCase):
         qc.measure(q[0], c[0])
         qc.measure(q[1], c[1])
 
-        backend = ForestBackend.ForestBackend()
-        job = execute(qc, backend=backend, shots=256)
-        job_result = job.result()
-        counts = job_result.get_counts(qc)
-        self.assertTrue( len(counts) == 1)
-        
-
+        return qc
 
 if __name__ == '__main__':
     unittest.main()

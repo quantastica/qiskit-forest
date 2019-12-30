@@ -141,8 +141,8 @@ class ForestJob(BaseJob):
 
             # Do we need counds in "statevector_simulator" results?
             # if so, implement weighted random over returned amplitudes instead running program twice
-            #counts=qc.run_and_measure(p)
-            #counts = ForestJob._convert_counts(counts)
+            counts = qc.run_and_measure(p)
+            counts = ForestJob._convert_counts(counts)
 
             return { "state": state, "counts": counts }
         else:
