@@ -176,9 +176,11 @@ class ForestJob(BaseJob):
         else:
             data['counts'] = res['counts']
 
+        backend_name = self._backend.name()
+
         self._result = {
             'success': True, 
-            'backend_name': qobj_header['backend_name'], 
+            'backend_name': backend_name,
             'qobj_id': qobjid ,
             'backend_version': rawversion, 
             'header': qobj_header,
