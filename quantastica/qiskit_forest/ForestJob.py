@@ -139,12 +139,18 @@ class ForestJob(BaseJob):
             wf = qc.wavefunction(p)
             state = np.array((np.real(wf.amplitudes), np.imag(wf.amplitudes))).T
 
+            # We need to switch from [re1,im1],[re2,im2]... format to
+            # c1, c2... format
+            complex_state = []
+            for s in state:
+                complex_state.append(complex(s[0],s[1]))
+
             # Do we need counts in "statevector_simulator" results?
             # if so, implement weighted random over returned amplitudes instead running program twice?
             counts = qc.run_and_measure(p)
             counts = ForestJob._convert_counts(counts)
 
-            return { "state": state, "counts": counts }
+            return { "state": complex_state, "counts": counts }
         else:
             ex=global_vars['ex']
 
