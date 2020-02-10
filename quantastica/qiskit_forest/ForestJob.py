@@ -59,10 +59,11 @@ class ForestJob(BaseJob):
         self._future = self._executor.submit(self._run_with_rigetti)
 
     def wait(self, timeout=None):
-        if self.status() is JobStatus.RUNNING :
-            futures.wait([self._future], timeout);
-        if self._future.exception() :
-            raise self._future.exception()
+        if self.status() in [JobStatus.RUNNING, JobStatus.QUEUED] :
+            futures.wait([self._future], timeout)
+        if self._future is not None:
+            if self._future.exception() :
+                raise self._future.exception()
 
     def result(self, timeout=None):
         self.wait(timeout)
@@ -81,13 +82,8 @@ class ForestJob(BaseJob):
             _status = JobStatus.CANCELLED
         elif self._future.done():
             _status = JobStatus.DONE if self._future.exception() is None else JobStatus.ERROR
-        else:
-            # Note: There is an undocumented Future state: PENDING, that seems to show up when
-            # the job is enqueued, waiting for someone to pick it up. We need to deal with this
-            # state but there's no public API for it, so we are assuming that if the job is not
-            # in any of the previous states, is PENDING, ergo INITIALIZING for
-            # us.
-            _status = JobStatus.INITIALIZING
+        else: # future is in pending state
+            _status = JobStatus.QUEUED
 
         return _status
 
