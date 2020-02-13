@@ -24,7 +24,6 @@ import requests
 
 from quantastica import qconvert
 from qiskit.providers import BaseJob, JobStatus, JobError
-from qiskit.qobj import validate_qobj_against_schema
 from qiskit.result import Result
 
 """ 
@@ -55,7 +54,6 @@ class ForestJob(BaseJob):
         if self._future is not None:
             raise JobError("We have already submitted the job!")
 
-        validate_qobj_against_schema(self._qobj)
         self._future = self._executor.submit(self._run_with_rigetti)
 
     def wait(self, timeout=None):
