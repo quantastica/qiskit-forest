@@ -21,7 +21,7 @@ class TestForestBackend(unittest.TestCase):
         warnings.filterwarnings(action="always", 
                          category=ResourceWarning)
 
-    @unittest.expectedFailure
+
     def test_bell_counts_with_seed(self):
         shots = 1024
         qc=TestForestBackend.get_bell_qc()

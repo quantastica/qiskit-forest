@@ -109,13 +109,18 @@ class ForestJob(BaseJob):
 
     @staticmethod     
     def _execute_rigetti(qobj, shots, lattice_name, as_qvm):
+        SEED_SIMULATOR_KEY = "seed_simulator"
+        qobj_dict = qobj.to_dict()
+        seed = None
+        if SEED_SIMULATOR_KEY in qobj_dict['config']:
+            seed =  qobj_dict['config'][SEED_SIMULATOR_KEY]
 
         conversion_options = { "all_experiments": False, 
             "create_exec_code": False, 
             "lattice": lattice_name, 
             "as_qvm": as_qvm,
-            "shots": shots }
-
+            "shots": shots,
+            "seed": seed }
         pyquilstr = qconvert.convert(
             qconvert.Format.QOBJ,
             qobj.to_dict(),
