@@ -15,6 +15,7 @@ import time
 import sys
 import logging
 import os
+import warnings
 
 
 @unittest.skipUnless(
@@ -28,10 +29,22 @@ class TestQAOA(unittest.TestCase):
             level=os.environ.get("LOGLEVEL", "CRITICAL"),
         )
         self.startTime = time.time()
+        """
+        Ignore following warning since it seems
+        that there is nothing that we can do about it
+        ResourceWarning: unclosed <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 50494), raddr=('127.0.0.1', 5000)>
+        """
+        warnings.filterwarnings(action="ignore", 
+                         category=ResourceWarning)
 
     def tearDown(self):
         t = time.time() - self.startTime
         sys.stderr.write(" took %.3fs ... " % (t))
+        """
+        Restore warnings back
+        """
+        warnings.filterwarnings(action="always", 
+                         category=ResourceWarning)
 
     def test_qaoa(self):
         print("Running AER test...")
