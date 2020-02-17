@@ -23,7 +23,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="quantastica-qiskit-forest",
-    version="0.9.16",
+    version="0.9.17",
     description="Forest backend for Qiskit: run Qiskit code on Rigetti quantum computers or simulators",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -40,6 +40,6 @@ setup(
     namespace_packages=['quantastica'],
     packages=find_namespace_packages(),
     include_package_data=True,
-    install_requires=["qiskit", "pyquil", "numpy", "quantastica-qconvert>=0.9.12"],
+    install_requires=["qiskit", "pyquil", "numpy", "quantastica-qconvert>=0.9.14"],
     entry_points={},
 )
