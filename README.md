@@ -58,6 +58,9 @@ backend = ForestBackend.get_backend("qasm_simulator")
 # backend = ForestBackend.get_backend("Aspen-7-28Q-A", as_qvm=True)
 # ...
 
+# To speed things up a little bit qiskit's optimization can be disabled
+# by setting optimization_level to 0 like following:
+# job = execute(qc, backend=backend, optimization_level=0)
 job = execute(qc, backend=backend)
 job_result = job.result()
 
