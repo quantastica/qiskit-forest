@@ -58,53 +58,20 @@ class TestQAOA(unittest.TestCase):
         print(aer_results)
         print("  ==== Forest Results =====")
         print(forest_results)
-        self.assertTrue(
-            np.array_equal(
-                aer_results["solution"], forest_results["solution"]
-            )
-        )
+        threshold = 0.9
+        aer_k = abs(aer_results['maxcut_objective']/aer_results['solution_objective'])
+        forest_k = abs(forest_results['maxcut_objective']/forest_results['solution_objective'])
+        self.assertGreater( aer_k, threshold )
+        self.assertGreater( forest_k, threshold )
 
     def run_simulation(self, backend):
-        n = 4
-        graph = nx.Graph()
-        graph.add_nodes_from(np.arange(0, n, 1))
-        elist = [
-            (0, 1, 1.0),
-            (0, 2, 1.0),
-            (0, 3, 1.0),
-            (1, 2, 1.0),
-            (2, 3, 1.0),
-        ]
-        graph.add_weighted_edges_from(elist)
-
-        """
         #
-        # Example graph from "Qiskit Textbook"
+        # Random 3-regular graph with 12 nodes
         #
-
-        # Butterfly graph with 5 nodes. Solution is: 10010
-
-        n     = 5
-        graph = nx.Graph()
-        graph.add_nodes_from(np.arange(0, n, 1))
-        elist = [(0,1,1.0),(0,2,1.0),(1,2,1.0),(3,2,1.0),(3,4,1.0),(4,2,1.0)]
-        graph.add_weighted_edges_from(elist)
-        """
-
-        """
-        #
-        # Example graph from Rigetti Grove
-        #
-
-        # Square graph from Rigetti's QAOA example. Solution is: 0101 or 1010
-
-        n     = 4
-        graph = nx.Graph()
-        graph.add_nodes_from(np.arange(0, n, 1))
-        elist = [(0,1,1.0),(1,2,1.0),(2,3,1.0),(3,0,1.0)]
-        graph.add_weighted_edges_from(elist)
-
-        """
+        n      = int(os.environ.get("N", "4"))
+        graph = nx.random_regular_graph(3, n)
+        for e in graph.edges():
+            graph[e[0]][e[1]]['weight'] = 1.0
 
         # Compute the weight matrix from the graph
         w = np.zeros([n, n])
@@ -126,7 +93,7 @@ class TestQAOA(unittest.TestCase):
         qubit_op, offset = docplex.get_operator(mdl)
 
         # Run quantum algorithm QAOA on qasm simulator
-        seed = 40598
+        seed = int(os.environ.get("SEED", "40598"))
         aqua_globals.random_seed = seed
 
         spsa = SPSA(max_trials=250)
