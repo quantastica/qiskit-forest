@@ -13,13 +13,13 @@ class TestForestBackend(unittest.TestCase):
         that there is nothing that we can do about it
         ResourceWarning: unclosed <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 50494), raddr=('127.0.0.1', 5000)>
         """
-        warnings.filterwarnings(action="ignore", 
+        warnings.filterwarnings(action="ignore",
                          category=ResourceWarning)
     def tearDown(self):
         """
         Restore warnings back
         """
-        warnings.filterwarnings(action="always", 
+        warnings.filterwarnings(action="always",
                          category=ResourceWarning)
 
 
@@ -65,7 +65,7 @@ class TestForestBackend(unittest.TestCase):
 
     def test_bell_state_vector(self):
         """
-        This is test for statevector which means that 
+        This is test for statevector which means that
         even with shots > 1 it should execute only one shot
         """
         shots = 256
@@ -81,14 +81,14 @@ class TestForestBackend(unittest.TestCase):
 
     def test_teleport_state_vector(self):
         """
-        This is test for statevector which means that 
+        This is test for statevector which means that
         even with shots > 1 it should execute only one shot
         """
         shots = 256
         qc = TestForestBackend.get_teleport_qc()
 
-        """ 
-        Let's first run the aer simulation to get statevector 
+        """
+        Let's first run the aer simulation to get statevector
         and counts so we can compare those results against forest's
         """
         stats_aer = TestForestBackend.execute_and_get_stats(
@@ -96,8 +96,8 @@ class TestForestBackend(unittest.TestCase):
             qc,
             shots
         )
-        """ 
-        Now execute forest backend 
+        """
+        Now execute forest backend
         """
         stats = TestForestBackend.execute_and_get_stats(
             ForestBackend.ForestBackend(lattice_name="statevector_simulator"),
@@ -109,8 +109,8 @@ class TestForestBackend(unittest.TestCase):
         self.assertEqual(len(stats['statevector']), len(stats_aer['statevector']))
         self.assertEqual(stats['totalcounts'], stats_aer['totalcounts'])
 
-        """ 
-        Let's verify that tests are working as expected 
+        """
+        Let's verify that tests are working as expected
         by running fail case
         """
         stats = TestForestBackend.execute_and_get_stats(
@@ -123,7 +123,7 @@ class TestForestBackend(unittest.TestCase):
         self.assertTrue(stats['statevector'] is None)
         self.assertNotEqual(stats['totalcounts'], stats_aer['totalcounts'])
 
-    def test_multiple_jobs(self):   
+    def test_multiple_jobs(self):
         qc = self.get_bell_qc()
         backend = ForestBackend.ForestBackend()
         jobs = []

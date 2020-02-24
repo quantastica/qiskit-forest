@@ -1,6 +1,6 @@
 # This code is part of quantastica.qiskit_forest
 #
-# (C) Copyright Quantastica 2019. 
+# (C) Copyright Quantastica 2019.
 # https://quantastica.com/
 #
 # This code is licensed under the Apache License, Version 2.0. You may

@@ -1,6 +1,6 @@
 # This code is part of quantastica.qiskit_forest
 #
-# (C) Copyright Quantastica 2019. 
+# (C) Copyright Quantastica 2019.
 # https://quantastica.com/
 #
 # This code is licensed under the Apache License, Version 2.0. You may
@@ -15,9 +15,7 @@ import uuid
 
 from quantastica.qiskit_forest import ForestJob
 from qiskit.providers import BaseBackend
-from qiskit.result import Result
 from qiskit.providers.models import BackendConfiguration
-import os
 
 class ForestBackend(BaseBackend):
     MAX_QUBITS_MEMORY = 32
@@ -47,7 +45,7 @@ class ForestBackend(BaseBackend):
                                              't'],
                              'gates': []}
 
-    def __init__(self, configuration=None, 
+    def __init__(self, configuration=None,
                 provider=None,
                 lattice_name = None,
                 as_qvm = False):
@@ -62,8 +60,8 @@ class ForestBackend(BaseBackend):
     def run(self, qobj):
         job_id = str(uuid.uuid4())
         job = ForestJob.ForestJob(
-            self, 
-            job_id, 
+            self,
+            job_id,
             qobj,
             lattice_name = self._lattice_name,
             as_qvm = self._as_qvm)

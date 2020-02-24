@@ -1,6 +1,6 @@
 # This code is part of quantastica.qiskit_forest
 #
-# (C) Copyright Quantastica 2019. 
+# (C) Copyright Quantastica 2019.
 # https://quantastica.com/
 #
 # This code is licensed under the Apache License, Version 2.0. You may
@@ -13,21 +13,14 @@
 
 from concurrent import futures
 import logging
-import sys
-import functools
-import os
 import time
-import subprocess
-import json
-import tempfile
-import requests
 import copy
 
 from quantastica import qconvert
 from qiskit.providers import BaseJob, JobStatus, JobError
 from qiskit.result import Result
 
-""" 
+"""
 In order to speed up compiling of pyquil code we need to import
 pyquil packages outside of compile/exec loop
 """
@@ -45,9 +38,9 @@ def _run_with_rigetti_static(qobj_dict, shots, lattice_name, as_qvm, job_id):
     if SEED_SIMULATOR_KEY in qobj_dict['config']:
         seed =  qobj_dict['config'][SEED_SIMULATOR_KEY]
 
-    conversion_options = { "all_experiments": False, 
-        "create_exec_code": False, 
-        "lattice": lattice_name, 
+    conversion_options = { "all_experiments": False,
+        "create_exec_code": False,
+        "lattice": lattice_name,
         "as_qvm": as_qvm,
         "shots": shots,
         "seed": seed }
@@ -92,13 +85,13 @@ def _run_with_rigetti_static(qobj_dict, shots, lattice_name, as_qvm, job_id):
     exp_header = exp_dict['header']
     expname = exp_header['name']
     result = {
-                'success': True, 
-                'meas_level': 2, 
-                'shots': shots, 
-                'data': data, 
-                'header': exp_header, 
-                'status': 'DONE', 
-                'name': expname, 
+                'success': True,
+                'meas_level': 2,
+                'shots': shots,
+                'data': data,
+                'header': exp_header,
+                'status': 'DONE',
+                'name': expname,
                 'seed_simulator': seed
             }
     return result
@@ -107,9 +100,9 @@ def _run_with_rigetti_static(qobj_dict, shots, lattice_name, as_qvm, job_id):
 class ForestJob(BaseJob):
 
     """
-    max_workers argument is set to 1 to prevent 
+    max_workers argument is set to 1 to prevent
     `rpcq._utils.RPCError: Unhandled memory fault at #x14.`
-    error which happens from time to time when there are 
+    error which happens from time to time when there are
     multiple jobs executing in parallel
     """
     _executor = futures.ThreadPoolExecutor(max_workers=1)
@@ -157,13 +150,13 @@ class ForestJob(BaseJob):
             qobj_header = qobj_dict['header']
             rawversion = "1.0.0"
             self._result = {
-                'success': True, 
-                'backend_name': "Toaster", 
+                'success': True,
+                'backend_name': "Toaster",
                 'qobj_id': qobjid ,
-                'backend_version': rawversion, 
+                'backend_version': rawversion,
                 'header': qobj_header,
-                'job_id': self._job_id, 
-                'results': results, 
+                'job_id': self._job_id,
+                'results': results,
                 'status': 'COMPLETED'
             }
             ForestJob._run_time += time.time() - self._t_submit
@@ -202,7 +195,7 @@ class ForestJob(BaseJob):
                         error += 1
                 else:
                     queued += 1
-            
+
             if error :
                 _status = JobStatus.ERROR
             elif running :
@@ -210,7 +203,7 @@ class ForestJob(BaseJob):
             elif canceled :
                 _status = JobStatus.CANCELLED
             elif done :
-                _status = JobStatus.DONE 
+                _status = JobStatus.DONE
             else: # future is in pending state
                 _status = JobStatus.QUEUED
         return _status
@@ -225,7 +218,7 @@ class ForestJob(BaseJob):
         for c in counts:
             bin="%d%s"%(c,bin)
         return hex(int(bin,2))
-        
+
     @staticmethod
     def _convert_counts(counts):
         ret = dict()

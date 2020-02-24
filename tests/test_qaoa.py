@@ -34,7 +34,7 @@ class TestQAOA(unittest.TestCase):
         that there is nothing that we can do about it
         ResourceWarning: unclosed <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 50494), raddr=('127.0.0.1', 5000)>
         """
-        warnings.filterwarnings(action="ignore", 
+        warnings.filterwarnings(action="ignore",
                          category=ResourceWarning)
 
     def tearDown(self):
@@ -43,7 +43,7 @@ class TestQAOA(unittest.TestCase):
         """
         Restore warnings back
         """
-        warnings.filterwarnings(action="always", 
+        warnings.filterwarnings(action="always",
                          category=ResourceWarning)
 
     def test_qaoa(self):
