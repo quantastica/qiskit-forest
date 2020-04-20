@@ -40,6 +40,6 @@ setup(
     namespace_packages=['quantastica'],
     packages=find_namespace_packages(),
     include_package_data=True,
-    install_requires=["qiskit", "pyquil", "numpy", "quantastica-qconvert>=0.9.15"],
+    install_requires=["qiskit", "pyquil", "numpy", "quantastica-qconvert>=0.9.16"],
     entry_points={},
 )
