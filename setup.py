@@ -23,7 +23,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="quantastica-qiskit-forest",
-    version="0.9.18",
+    version="0.9.19",
     description="Forest backend for Qiskit: run Qiskit code on Rigetti quantum computers or simulators",
     long_description=README,
     long_description_content_type="text/markdown",
