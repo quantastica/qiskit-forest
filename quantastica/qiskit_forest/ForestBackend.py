@@ -14,10 +14,10 @@
 import uuid
 
 from quantastica.qiskit_forest import ForestJob
-from qiskit.providers import BaseBackend
+from qiskit.providers import BackendV2
 from qiskit.providers.models import BackendConfiguration
 
-class ForestBackend(BaseBackend):
+class ForestBackend(BackendV2):
     MAX_QUBITS_MEMORY = 32
 
     DEFAULT_CONFIGURATION = {'backend_name': 'Forest',

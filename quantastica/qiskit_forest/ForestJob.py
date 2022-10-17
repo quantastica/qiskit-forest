@@ -17,7 +17,7 @@ import time
 import copy
 
 from quantastica import qconvert
-from qiskit.providers import BaseJob, JobStatus, JobError
+from qiskit.providers import JobV1, JobStatus, JobError
 from qiskit.result import Result
 
 """
@@ -97,7 +97,7 @@ def _run_with_rigetti_static(qobj_dict, shots, lattice_name, as_qvm, job_id):
     return result
 
 
-class ForestJob(BaseJob):
+class ForestJob(JobV1):
 
     """
     max_workers argument is set to 1 to prevent
